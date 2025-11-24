@@ -1,0 +1,18 @@
+{
+    "file_id": "1",
+    "src_file": "example/1.py",
+    "target_file": "example/1_transformation.py",
+    "single_operator": null,
+    "patch_path": "example/1.patch",
+    "applicable_operators": [
+        "apr_change_arith_op",
+        "apr_change_return",
+        "apr_change_type",
+        "apr_replace_single_var_usage"
+    ],
+    "exception": null,
+    "total_time": 0.00367,
+    "diff_output": "--- example/1.py\n+++ example/1_transformation.py\n@@ -1,4 +1,4 @@\n def modified_length(a, b):\n-    changed_length = 10\n-    a = b + changed_length\n-    return a\n+    changed_length = '10'\n+    a = a * changed_length\n+    return not a\n",
+    "original_code": "def modified_length(a, b):\n    changed_length = 10\n    a = b + changed_length\n    return a",
+    "transformed_code": "def modified_length(a, b):\n    changed_length = '10'\n    a = a * changed_length\n    return not a"
+}

@@ -1,0 +1,10 @@
+--- example/1.py
++++ example/1_transformation.py
+@@ -1,4 +1,4 @@
+ def modified_length(a, b):
+-    changed_length = 10
+-    a = b + changed_length
+-    return a
++    changed_length = '10'
++    a = a * changed_length
++    return not a
