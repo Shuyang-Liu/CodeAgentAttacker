@@ -1,9 +1,11 @@
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-OUT_BASE="$ROOT_DIR/outputs/swebench/devstral-small"
-CONFIG_PATH="$ROOT_DIR/src/minisweagent/config/extra/swebench_devstral_small.yaml"
+MODEL="openai/gpt-5-mini"
+MODEL_NAME="${MODEL##*/}"
+OUT_BASE="$ROOT_DIR/outputs/swebench/$MODEL_NAME"
+CONFIG_PATH="$ROOT_DIR/src/minisweagent/config/extra/swebench_gpt-5-mini.yaml"
 
-mini-extra swebench-single \
-  --model mistralai/devstral-small \
+mini-extra swebench \
+  --model "$MODEL" \
   --model-class openrouter \
   --subset verified \
   --split test \

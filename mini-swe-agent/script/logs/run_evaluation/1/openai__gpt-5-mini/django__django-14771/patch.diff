@@ -1,0 +1,39 @@
+diff --git a/django/utils/autoreload.py b/django/utils/autoreload.py
+index cc65c043ab..a4cd9fb88f 100644
+--- a/django/utils/autoreload.py
++++ b/django/utils/autoreload.py
+@@ -219,7 +219,25 @@ def get_child_arguments():
+     import __main__
+     py_script = Path(sys.argv[0])
+ 
+-    args = [sys.executable] + ['-W%s' % o for o in sys.warnoptions]
++    args = [sys.executable]
++
++    args += ['-W%s' % o for o in sys.warnoptions]
++
++    # Pass CPython -X options (sys._xoptions) to child process
++
++    xoptions = getattr(sys, '_xoptions', None)
++
++    if xoptions:
++
++        for name, val in xoptions.items():
++
++            if val is True:
++
++                args += ['-X', name]
++
++            else:
++
++                args += ['-X', '%s=%s' % (name, val)]
+     # __spec__ is set when the server was started with the `-m` option,
+     # see https://docs.python.org/3/reference/import.html#main-spec
+     # __spec__ may not exist, e.g. when running in a Conda env.
+diff --git a/dummy_script.py b/dummy_script.py
+new file mode 100644
+index 0000000000..b7be63586a
+--- /dev/null
++++ b/dummy_script.py
+@@ -0,0 +1 @@
++print("dummy")
+\ No newline at end of file

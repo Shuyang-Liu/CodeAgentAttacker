@@ -1,0 +1,20 @@
+{
+  "info": {
+    "total_observations": 5,
+    "python_observations": 0,
+    "text_observations": 5,
+    "ast_operators_applied": 0,
+    "text_perturbation_applied": 1,
+    "skipped": 4
+  },
+  "perturbations": [
+    {
+      "action": "ls -la",
+      "original": "total 176\ndrwxrwxrwx  1 root root  4096 Sep 10 16:18 .\ndrwxr-xr-x  1 root root  4096 Nov 29 21:52 ..\ndrwxrwxrwx  2 root root  4096 Sep 10 16:16 .ci\n-rw-r--r--  1 root root   497 Sep 10 16:16 .editorconfig\ndrwxrwxrwx  8 root root  4096 Sep 10 16:18 .git\n-rw-r--r--  1 root root    20 Sep 10 16:16 .gitattributes\n-rw-r--r--  1 root root  1595 Sep 10 16:16 .gitignore\n-rw-r--r--  1 root root 21648 Sep 10 16:16 .mailmap\n-rw-r--r--  1 root root  8286 Sep 10 16:16 .travis.yml\n-rw-r--r--  1 root root 24424 Sep 10 16:16 AUTHORS\n-rw-r--r--  1 root root  3268 Sep 10 16:16 CODE_OF_CONDUCT.md\n-rw-r--r--  1 root root  3241 Sep 10 16:16 LICENSE\n-rw-r--r--  1 root root   213 Sep 10 16:16 MANIFEST.in\n-rw-r--r--  1 root root   331 Sep 10 16:16 PULL_REQUEST_TEMPLATE.md\n-rw-r--r--  1 root root  9786 Sep 10 16:16 README.rst\ndrwxrwxrwx  2 root root  4096 Sep 10 16:16 bin\n-rw-r--r--  1 root root  1892 Sep 10 16:16 conftest.py\ndrwxrwxrwx  3 root root  4096 Sep 10 16:16 data\ndrwxrwxrwx  7 root root  4096 Sep 10 16:16 doc\ndrwxr-xr-x  6 root root  4096 Sep 10 16:16 examples\n-rw-r--r--  1 root root  4408 Sep 10 16:16 github_deploy_key.enc\ndrwxrwxrwx  2 root root  4096 Sep 10 16:16 release\n-rwxr-xr-x  1 root root 11762 Sep 10 16:16 setup.py\n-rw-r--r--  1 root root    49 Sep 10 16:16 setupegg.py\ndrwxrwxrwx 40 root root  4096 Sep 10 16:16 sympy\ndrwxr-xr-x  2 root root  4096 Sep 10 16:18 sympy.egg-info\n-rw-r--r--  1 root root  2200 Sep 10 16:16 tox.ini.sample\n",
+      "perturbed": "drwxrwxrwx  2 root root  4096 Sep 10 16:16 .ci\ndrwxrwxrwx  1 root root  4096 Sep 10 16:18 .\n-rw-r--r--  1 root root   497 Sep 10 16:16 .editorconfig\ndrwxrwxrwx  8 root root  4096 Sep 10 16:18 .git\n-rw-r--r--  1 root root    20 Sep 10 16:16 .gitattributes\n-rw-r--r--  1 root root 21648 Sep 10 16:16 .mailmap\n-rw-r--r--  1 root root  1595 Sep 10 16:16 .gitignore\n-rw-r--r--  1 root root  8286 Sep 10 16:16 .travis.yml\n-rw-r--r--  1 root root 24424 Sep 10 16:16 AUTHORS\n-rw-r--r--  1 root root  3241 Sep 10 16:16 LICENSE\n-rw-r--r--  1 root root   213 Sep 10 16:16 MANIFEST.in\n-rw-r--r--  1 root root  9786 Sep 10 16:16 README.rst\n-rw-r--r--  1 root root   331 Sep 10 16:16 PULL_REQUEST_TEMPLATE.md\ndrwxrwxrwx  2 root root  4096 Sep 10 16:16 bin\n-rw-r--r--  1 root root  1892 Sep 10 16:16 conftest.py\n-rwxr-xr-x  1 root root 11762 Sep 10 16:16 setup.py\ndrwxrwxrwx  3 root root  4096 Sep 10 16:16 data\ndrwxrwxrwx 40 root root  4096 Sep 10 16:16 sympy\n-rw-r--r--  1 root root    49 Sep 10 16:16 setupegg.py\ndrwxr-xr-x  2 root root  4096 Sep 10 16:18 sympy.egg-info\n-rw-r--r--  1 root root  2200 Sep 10 16:16 tox.ini.sample",
+      "applied_operators": [
+        "text_perturbation"
+      ]
+    }
+  ]
+}

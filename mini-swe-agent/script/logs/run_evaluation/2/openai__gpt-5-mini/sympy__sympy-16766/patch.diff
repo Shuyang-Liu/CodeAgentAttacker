@@ -1,0 +1,43 @@
+diff --git a/sympy/printing/pycode.py b/sympy/printing/pycode.py
+index a3f031073..4031d79c5 100644
+--- a/sympy/printing/pycode.py
++++ b/sympy/printing/pycode.py
+@@ -349,6 +349,38 @@ def _print_NoneToken(self, arg):
+ 
+ class PythonCodePrinter(AbstractPythonCodePrinter):
+ 
++    def _print_Indexed(self, expr):
++        base, *index = expr.args
++        # Print the base without invoking self._print to avoid marking it as not-supported
++        base_name = getattr(base, 'label', None)
++        if base_name is None:
++            try:
++                base_name = str(base)
++            except Exception:
++                base_name = self._print(base)
++        res = "{}[{}]".format(base_name, ", ".join([self._print(ind) for ind in index]))
++        # If this expr was previously marked as not-supported, remove it so no header is printed
++        try:
++            if hasattr(self, '_not_supported'):
++                self._not_supported.discard(expr)
++        except Exception:
++            pass
++        return res
++
++
++    def _print_IndexedBase(self, expr):
++        """Print an IndexedBase by its label or string representation."""
++        name = getattr(expr, 'label', None)
++        if name is None:
++            # fall back to str(expr) which typically yields the base name
++            try:
++                return str(expr)
++            except Exception:
++                return self._print(getattr(expr, 'name', expr))
++        if isinstance(name, str):
++            return name
++        return self._print(name)
++
+     def _print_sign(self, e):
+         return '(0.0 if {e} == 0 else {f}(1, {e}))'.format(
+             f=self._module_format('math.copysign'), e=self._print(e.args[0]))

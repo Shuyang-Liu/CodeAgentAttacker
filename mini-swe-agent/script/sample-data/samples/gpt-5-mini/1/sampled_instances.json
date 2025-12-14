@@ -1,0 +1,302 @@
+[
+  {
+    "instance_id": "matplotlib__matplotlib-23476",
+    "difficulty": "easy",
+    "repo": "matplotlib/matplotlib"
+  },
+  {
+    "instance_id": "pytest-dev__pytest-6197",
+    "difficulty": "hard",
+    "repo": "pytest-dev/pytest"
+  },
+  {
+    "instance_id": "sympy__sympy-15976",
+    "difficulty": "medium",
+    "repo": "sympy/sympy"
+  },
+  {
+    "instance_id": "sphinx-doc__sphinx-7910",
+    "difficulty": "easy",
+    "repo": "sphinx-doc/sphinx"
+  },
+  {
+    "instance_id": "django__django-12663",
+    "difficulty": "medium",
+    "repo": "django/django"
+  },
+  {
+    "instance_id": "astropy__astropy-8872",
+    "difficulty": "medium",
+    "repo": "astropy/astropy"
+  },
+  {
+    "instance_id": "sympy__sympy-12489",
+    "difficulty": "hard",
+    "repo": "sympy/sympy"
+  },
+  {
+    "instance_id": "django__django-14007",
+    "difficulty": "hard",
+    "repo": "django/django"
+  },
+  {
+    "instance_id": "django__django-13449",
+    "difficulty": "hard",
+    "repo": "django/django"
+  },
+  {
+    "instance_id": "django__django-16032",
+    "difficulty": "medium",
+    "repo": "django/django"
+  },
+  {
+    "instance_id": "sympy__sympy-24562",
+    "difficulty": "easy",
+    "repo": "sympy/sympy"
+  },
+  {
+    "instance_id": "sympy__sympy-20154",
+    "difficulty": "medium",
+    "repo": "sympy/sympy"
+  },
+  {
+    "instance_id": "django__django-13128",
+    "difficulty": "hard",
+    "repo": "django/django"
+  },
+  {
+    "instance_id": "django__django-16642",
+    "difficulty": "easy",
+    "repo": "django/django"
+  },
+  {
+    "instance_id": "scikit-learn__scikit-learn-25102",
+    "difficulty": "hard",
+    "repo": "scikit-learn/scikit-learn"
+  },
+  {
+    "instance_id": "django__django-11133",
+    "difficulty": "easy",
+    "repo": "django/django"
+  },
+  {
+    "instance_id": "sympy__sympy-22456",
+    "difficulty": "medium",
+    "repo": "sympy/sympy"
+  },
+  {
+    "instance_id": "matplotlib__matplotlib-20859",
+    "difficulty": "easy",
+    "repo": "matplotlib/matplotlib"
+  },
+  {
+    "instance_id": "django__django-13820",
+    "difficulty": "medium",
+    "repo": "django/django"
+  },
+  {
+    "instance_id": "sphinx-doc__sphinx-10449",
+    "difficulty": "easy",
+    "repo": "sphinx-doc/sphinx"
+  },
+  {
+    "instance_id": "sphinx-doc__sphinx-9258",
+    "difficulty": "easy",
+    "repo": "sphinx-doc/sphinx"
+  },
+  {
+    "instance_id": "sympy__sympy-16597",
+    "difficulty": "hard",
+    "repo": "sympy/sympy"
+  },
+  {
+    "instance_id": "pytest-dev__pytest-5787",
+    "difficulty": "hard",
+    "repo": "pytest-dev/pytest"
+  },
+  {
+    "instance_id": "sympy__sympy-13480",
+    "difficulty": "easy",
+    "repo": "sympy/sympy"
+  },
+  {
+    "instance_id": "django__django-11555",
+    "difficulty": "easy",
+    "repo": "django/django"
+  },
+  {
+    "instance_id": "django__django-15268",
+    "difficulty": "hard",
+    "repo": "django/django"
+  },
+  {
+    "instance_id": "django__django-14631",
+    "difficulty": "hard",
+    "repo": "django/django"
+  },
+  {
+    "instance_id": "pytest-dev__pytest-5631",
+    "difficulty": "medium",
+    "repo": "pytest-dev/pytest"
+  },
+  {
+    "instance_id": "sphinx-doc__sphinx-9229",
+    "difficulty": "hard",
+    "repo": "sphinx-doc/sphinx"
+  },
+  {
+    "instance_id": "pylint-dev__pylint-4604",
+    "difficulty": "medium",
+    "repo": "pylint-dev/pylint"
+  },
+  {
+    "instance_id": "sympy__sympy-14248",
+    "difficulty": "hard",
+    "repo": "sympy/sympy"
+  },
+  {
+    "instance_id": "django__django-16631",
+    "difficulty": "hard",
+    "repo": "django/django"
+  },
+  {
+    "instance_id": "django__django-13809",
+    "difficulty": "medium",
+    "repo": "django/django"
+  },
+  {
+    "instance_id": "django__django-14011",
+    "difficulty": "hard",
+    "repo": "django/django"
+  },
+  {
+    "instance_id": "sympy__sympy-16792",
+    "difficulty": "medium",
+    "repo": "sympy/sympy"
+  },
+  {
+    "instance_id": "django__django-14559",
+    "difficulty": "medium",
+    "repo": "django/django"
+  },
+  {
+    "instance_id": "django__django-14373",
+    "difficulty": "easy",
+    "repo": "django/django"
+  },
+  {
+    "instance_id": "django__django-13401",
+    "difficulty": "medium",
+    "repo": "django/django"
+  },
+  {
+    "instance_id": "sphinx-doc__sphinx-9461",
+    "difficulty": "hard",
+    "repo": "sphinx-doc/sphinx"
+  },
+  {
+    "instance_id": "pydata__xarray-7229",
+    "difficulty": "medium",
+    "repo": "pydata/xarray"
+  },
+  {
+    "instance_id": "django__django-12125",
+    "difficulty": "easy",
+    "repo": "django/django"
+  },
+  {
+    "instance_id": "sphinx-doc__sphinx-9711",
+    "difficulty": "easy",
+    "repo": "sphinx-doc/sphinx"
+  },
+  {
+    "instance_id": "pydata__xarray-3993",
+    "difficulty": "hard",
+    "repo": "pydata/xarray"
+  },
+  {
+    "instance_id": "astropy__astropy-7606",
+    "difficulty": "medium",
+    "repo": "astropy/astropy"
+  },
+  {
+    "instance_id": "pytest-dev__pytest-5262",
+    "difficulty": "easy",
+    "repo": "pytest-dev/pytest"
+  },
+  {
+    "instance_id": "sympy__sympy-23413",
+    "difficulty": "medium",
+    "repo": "sympy/sympy"
+  },
+  {
+    "instance_id": "astropy__astropy-13579",
+    "difficulty": "hard",
+    "repo": "astropy/astropy"
+  },
+  {
+    "instance_id": "sphinx-doc__sphinx-7454",
+    "difficulty": "easy",
+    "repo": "sphinx-doc/sphinx"
+  },
+  {
+    "instance_id": "django__django-15128",
+    "difficulty": "hard",
+    "repo": "django/django"
+  },
+  {
+    "instance_id": "django__django-12858",
+    "difficulty": "medium",
+    "repo": "django/django"
+  },
+  {
+    "instance_id": "django__django-13512",
+    "difficulty": "easy",
+    "repo": "django/django"
+  },
+  {
+    "instance_id": "astropy__astropy-8707",
+    "difficulty": "medium",
+    "repo": "astropy/astropy"
+  },
+  {
+    "instance_id": "sphinx-doc__sphinx-8459",
+    "difficulty": "easy",
+    "repo": "sphinx-doc/sphinx"
+  },
+  {
+    "instance_id": "django__django-13346",
+    "difficulty": "medium",
+    "repo": "django/django"
+  },
+  {
+    "instance_id": "django__django-12708",
+    "difficulty": "hard",
+    "repo": "django/django"
+  },
+  {
+    "instance_id": "django__django-12741",
+    "difficulty": "easy",
+    "repo": "django/django"
+  },
+  {
+    "instance_id": "sphinx-doc__sphinx-11510",
+    "difficulty": "hard",
+    "repo": "sphinx-doc/sphinx"
+  },
+  {
+    "instance_id": "django__django-10880",
+    "difficulty": "easy",
+    "repo": "django/django"
+  },
+  {
+    "instance_id": "matplotlib__matplotlib-25479",
+    "difficulty": "easy",
+    "repo": "matplotlib/matplotlib"
+  },
+  {
+    "instance_id": "pytest-dev__pytest-7571",
+    "difficulty": "medium",
+    "repo": "pytest-dev/pytest"
+  }
+]

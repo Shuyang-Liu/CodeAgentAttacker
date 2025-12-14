@@ -164,6 +164,16 @@ def process_instance(
             instance_id=instance_id,
             print_fct=logger.info,
         )
+
+        # Save attack data if enabled
+        if hasattr(agent, "config") and agent.config.enable_attack:
+            attack_data = agent.get_attack_data()
+            if attack_data:
+                attack_file = instance_dir / f"{instance_id}.attack.json"
+                with open(attack_file, "w") as f:
+                    json.dump(attack_data, f, indent=2)
+                logger.info(f"Saved attack data to {attack_file}")
+
         update_preds_file(output_dir / "preds.json", instance_id, model.config.model_name, result)
         progress_manager.on_instance_end(instance_id, exit_status)
 

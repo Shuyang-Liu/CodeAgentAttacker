@@ -1,0 +1,1 @@
+Command '['docker', 'run', '-d', '--name', 'minisweagent-ece83a0b', '-w', '/testbed', '--rm', 'docker.io/swebench/sweb.eval.x86_64.matplotlib_1776_matplotlib-25122:latest', 'sleep', '2h']' timed out after 120 seconds

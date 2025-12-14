@@ -1,0 +1,38 @@
+diff --git a/django/template/defaultfilters.py b/django/template/defaultfilters.py
+index 1c844580c6..2f94ed85e9 100644
+--- a/django/template/defaultfilters.py
++++ b/django/template/defaultfilters.py
+@@ -10,7 +10,7 @@ from urllib.parse import quote
+ 
+ from django.utils import formats
+ from django.utils.dateformat import format, time_format
+-from django.utils.encoding import iri_to_uri
++from django.utils.encoding import iri_to_uri, force_str
+ from django.utils.html import (
+     avoid_wrapping, conditional_escape, escape, escapejs,
+     json_script as _json_script, linebreaks, strip_tags, urlize as _urlize,
+@@ -677,11 +677,15 @@ def add(value, arg):
+     try:
+         return int(value) + int(arg)
+     except (ValueError, TypeError):
++        # Try direct concatenation first (covers normal strings and sequences).
+         try:
+             return value + arg
+         except Exception:
+-            return ''
+-
++            # Fallback: coerce lazy proxy objects to strings and concatenate.
++            try:
++                return force_str(value) + force_str(arg)
++            except Exception:
++                return ''
+ 
+ @register.filter(is_safe=False)
+ def get_digit(value, arg):
+@@ -919,4 +923,4 @@ def pprint(value):
+     try:
+         return pformat(value)
+     except Exception as e:
+-        return "Error in formatting: %s: %s" % (e.__class__.__name__, e)
++        return "Error in formatting: %s: %s" % (e.__class__.__name__, e)
+\ No newline at end of file

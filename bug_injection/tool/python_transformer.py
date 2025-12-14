@@ -1,26 +1,8 @@
 import random
 import numpy as np
-import utils
 
-# List of operators:
-import operators.AprChangeArithOp
-import operators.AprChangeCompareOp
-import operators.AprChangeConditionOp
-import operators.AprChangeReturn
-import operators.AprChangeType
-import operators.AprExceptionRemoval
-import operators.AprIfBlockRemoval
-import operators.AprIfChunkRemoval
-import operators.AprNullCheckRemoval
-import operators.AprPartialConditionRemoval
-import operators.AprConditionAddition
-import operators.AprLoopUnwrap
-import operators.AprVarReplacement
-import operators.AprMethodCallReplacement
-import operators.AprReturnRemoval
-import operators.AprElseRemoval
-import operators.AprMethodCallParReplacement
-import operators.AprRemoveCall
+from bug_injection.tool import utils
+from bug_injection.tool import operators
 
 
 def apr_change_arith_op(python_code, applicable_operators):

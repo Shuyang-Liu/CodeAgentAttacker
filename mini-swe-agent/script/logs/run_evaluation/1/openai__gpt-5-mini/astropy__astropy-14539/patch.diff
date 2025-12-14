@@ -1,0 +1,66 @@
+diff --git a/astropy/io/fits/diff.py b/astropy/io/fits/diff.py
+index 100cdf1b8..03ef37a6d 100644
+--- a/astropy/io/fits/diff.py
++++ b/astropy/io/fits/diff.py
+@@ -1460,7 +1460,42 @@ class TableDataDiff(_BaseDiff):
+                     ],
+                 )
+             else:
+-                diffs = np.where(arra != arrb)
++                try:
++                    diffs = np.where(arra != arrb)
++                except ValueError:
++                    # Fallback for columns containing sequences / VLAs where
++                    # element-wise comparison raises a ValueError because
++                    # comparisons produce ambiguity for array-like cells.
++                    diffs_list = []
++                    for i in range(len(arra)):
++                        a_cell = arra[i]
++                        b_cell = arrb[i]
++                        eq = False
++                        try:
++                            aa = np.asarray(a_cell)
++                            bb = np.asarray(b_cell)
++                            if aa.shape != bb.shape:
++                                eq = False
++                            else:
++                                # Use allclose for floating types, exact for others
++                                if np.issubdtype(aa.dtype, np.floating) or np.issubdtype(bb.dtype, np.floating):
++                                    eq = np.allclose(aa, bb, rtol=self.rtol, atol=self.atol)
++                                else:
++                                    eq = np.array_equal(aa, bb)
++                        except Exception:
++                            # Last resort: try Python equality and coerce array result to bool
++                            try:
++                                res = a_cell == b_cell
++                                if isinstance(res, (list, tuple)) or (hasattr(res, 'dtype') and getattr(res, 'dtype', None) is not None):
++                                    res = np.asarray(res)
++                                    eq = bool(res.all())
++                                else:
++                                    eq = bool(res)
++                            except Exception:
++                                eq = False
++                        if not eq:
++                            diffs_list.append(i)
++                    diffs = (np.array(diffs_list),)
+ 
+             self.diff_total += len(set(diffs[0]))
+ 
+diff --git a/diffbug.fits b/diffbug.fits
+new file mode 100644
+index 000000000..fb6df78b7
+Binary files /dev/null and b/diffbug.fits differ
+diff --git a/repro.py b/repro.py
+new file mode 100644
+index 000000000..6f68265b6
+--- /dev/null
++++ b/repro.py
+@@ -0,0 +1,8 @@
++import sys, os
++sys.path.insert(0, os.getcwd())
++from astropy.io import fits
++col = fits.Column('a', format='QD', array=[[0], [0, 0]])
++hdu = fits.BinTableHDU.from_columns([col])
++hdu.writeto('diffbug.fits', overwrite=True)
++print(fits.FITSDiff('diffbug.fits', 'diffbug.fits').identical)
++fits.printdiff('diffbug.fits', 'diffbug.fits')

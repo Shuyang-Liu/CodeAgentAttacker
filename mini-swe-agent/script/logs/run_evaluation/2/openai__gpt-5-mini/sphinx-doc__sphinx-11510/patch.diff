@@ -1,0 +1,78 @@
+diff --git a/sphinx/directives/other.py b/sphinx/directives/other.py
+index 19f7c0a8d..5988f266e 100644
+--- a/sphinx/directives/other.py
++++ b/sphinx/directives/other.py
+@@ -363,20 +363,63 @@ class Only(SphinxDirective):
+ 
+ 
+ class Include(BaseInclude, SphinxDirective):
+-    """
+-    Like the standard "Include" directive, but interprets absolute paths
+-    "correctly", i.e. relative to source directory.
+-    """
+-
+     def run(self) -> list[Node]:
+-        if self.arguments[0].startswith('<') and \
+-           self.arguments[0].endswith('>'):
+-            # docutils "standard" includes, do not do path processing
++        # If it's a standard docutils include (<...>), defer to docutils.
++        if self.arguments[0].startswith('<') and self.arguments[0].endswith('>'):
+             return super().run()
++
++        # Resolve filename and note inclusion as Sphinx normally does.
+         rel_filename, filename = self.env.relfn2path(self.arguments[0])
+-        self.arguments[0] = filename
+         self.env.note_included(filename)
+-        return super().run()
++        self.arguments[0] = filename
++
++        # Temporarily patch docutils' FileInput.read and readlines so that
++        # included files are passed through Sphinx's 'source-read' event,
++        # allowing extensions to modify included content.
++        from docutils import io as docutils_io
++
++        orig_read = getattr(docutils_io.FileInput, 'read', None)
++        orig_readlines = getattr(docutils_io.FileInput, 'readlines', None)
++
++        def _patched_read(file_input_self, *args, **kwargs):
++            raw = orig_read(file_input_self, *args, **kwargs) if orig_read else ''
++            try:
++                docname = self.env.path2doc(getattr(file_input_self, 'source_path', '') or '') or self.env.docname
++                arg = [raw]
++                self.env.events.emit('source-read', docname, arg)
++                return arg[0]
++            except Exception:
++                return raw
++
++        def _patched_readlines(file_input_self, *args, **kwargs):
++            lines = orig_readlines(file_input_self, *args, **kwargs) if orig_readlines else []
++            raw = ''.join(lines)
++            try:
++                docname = self.env.path2doc(getattr(file_input_self, 'source_path', '') or '') or self.env.docname
++                arg = [raw]
++                self.env.events.emit('source-read', docname, arg)
++                return arg[0].splitlines(True)
++            except Exception:
++                return lines
++
++        patched = False
++        try:
++            if orig_read is not None:
++                docutils_io.FileInput.read = _patched_read
++                patched = True
++            if orig_readlines is not None:
++                docutils_io.FileInput.readlines = _patched_readlines
++                patched = True
++
++            # delegate to the original implementation (docutils) to do the rest
++            return super().run()
++        finally:
++            # restore original methods
++            if patched:
++                if orig_read is not None:
++                    docutils_io.FileInput.read = orig_read
++                if orig_readlines is not None:
++                    docutils_io.FileInput.readlines = orig_readlines
+ 
+ 
+ def setup(app: Sphinx) -> dict[str, Any]:

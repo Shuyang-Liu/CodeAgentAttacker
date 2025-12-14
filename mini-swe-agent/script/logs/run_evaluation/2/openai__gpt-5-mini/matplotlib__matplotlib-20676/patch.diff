@@ -1,0 +1,16 @@
+diff --git a/lib/matplotlib/widgets.py b/lib/matplotlib/widgets.py
+index a199e45d4..c1c314e75 100644
+--- a/lib/matplotlib/widgets.py
++++ b/lib/matplotlib/widgets.py
+@@ -2370,6 +2370,11 @@ class ToolLineHandles:
+         self._line_props = line_props
+ 
+         self.artists = [line_fun(p, **line_props) for p in positions]
++        for artist in self.artists:
++                try:
++                        artist.set_autoscale_on(False)
++                except AttributeError:
++                        pass
+ 
+     @property
+     def positions(self):

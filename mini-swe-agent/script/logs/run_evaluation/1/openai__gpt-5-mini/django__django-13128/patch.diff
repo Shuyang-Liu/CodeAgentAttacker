@@ -1,0 +1,37 @@
+diff --git a/django/db/models/expressions.py b/django/db/models/expressions.py
+index d913658291..b3ba378fca 100644
+--- a/django/db/models/expressions.py
++++ b/django/db/models/expressions.py
+@@ -423,6 +423,32 @@ class Expression(BaseExpression, Combinable):
+ 
+ 
+ class CombinedExpression(SQLiteNumericMixin, Expression):
++    def _resolve_output_field(self):
++        """Infer the output field for combined expressions.
++
++        Special-case temporal subtraction: when subtracting two date/time
++        fields of the same type, the result is a DurationField. This
++        allows expressions like (datetime - datetime) + duration to work
++        without requiring an ExpressionWrapper.
++        """
++        try:
++            lhs_field = self.lhs._output_field_or_none
++            rhs_field = self.rhs._output_field_or_none
++        except Exception:
++            return super()._resolve_output_field()
++
++        datetime_fields = {'DateField', 'DateTimeField', 'TimeField'}
++        try:
++            lhs_type = lhs_field.get_internal_type() if lhs_field is not None else None
++            rhs_type = rhs_field.get_internal_type() if rhs_field is not None else None
++        except Exception:
++            return super()._resolve_output_field()
++
++        if self.connector == self.SUB and lhs_type in datetime_fields and lhs_type == rhs_type:
++            return fields.DurationField()
++
++        return super()._resolve_output_field()
++
+ 
+     def __init__(self, lhs, connector, rhs, output_field=None):
+         super().__init__(output_field=output_field)

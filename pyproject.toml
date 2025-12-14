@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "code-agent-attacker"
+version = "0.1.0"
+description = "Bug injection toolkit for attacking code agents"
+requires-python = ">=3.10"
+
+dependencies = [
+    "numpy>=1.20.0",
+    "datasets>=3.2.0",
+    "matplotlib",
+    "seaborn",
+]
+
+[tool.setuptools]
+packages = ["bug_injection", "bug_injection.tool", "bug_injection.tool.operators"]

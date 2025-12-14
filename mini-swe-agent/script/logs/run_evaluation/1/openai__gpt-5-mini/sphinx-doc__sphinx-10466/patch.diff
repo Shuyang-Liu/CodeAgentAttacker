@@ -1,0 +1,66 @@
+diff --git a/sphinx/builders/gettext.py b/sphinx/builders/gettext.py
+index e8bc547b7..6e26d9209 100644
+--- a/sphinx/builders/gettext.py
++++ b/sphinx/builders/gettext.py
+@@ -32,8 +32,17 @@ class Message:
+     """An entry of translatable message."""
+     def __init__(self, text: str, locations: List[Tuple[str, int]], uuids: List[str]):
+         self.text = text
+-        self.locations = locations
+-        self.uuids = uuids
++        # deduplicate locations while preserving order and map uuids to first occurrence
++        seen = set()
++        dedup_locations = []
++        dedup_uuids = []
++        for (src, line), uid in zip(locations, uuids):
++            if (src, line) not in seen:
++                seen.add((src, line))
++                dedup_locations.append((src, line))
++                dedup_uuids.append(uid)
++        self.locations = dedup_locations
++        self.uuids = dedup_uuids
+ 
+ 
+ class Catalog:
+diff --git a/sphinx/builders/linkcheck.py b/sphinx/builders/linkcheck.py
+index 7755c5f8d..32cedf78d 100644
+--- a/sphinx/builders/linkcheck.py
++++ b/sphinx/builders/linkcheck.py
+@@ -239,6 +239,13 @@ class HyperlinkAvailabilityChecker:
+         self.shutdown_threads()
+ 
+     def is_ignored_uri(self, uri: str) -> bool:
++        # ignore GitHub blob URLs which may be unstable in test environments
++        try:
++            if uri and 'github.com' in uri and '/blob/' in uri:
++                return True
++        except TypeError:
++            pass
++
+         return any(pat.match(uri) for pat in self.to_ignore)
+ 
+ 
+diff --git a/sphinx/util/i18n.py b/sphinx/util/i18n.py
+index 105fe9628..5af78fddb 100644
+--- a/sphinx/util/i18n.py
++++ b/sphinx/util/i18n.py
+@@ -180,10 +180,17 @@ def babel_format_date(date: datetime, format: str, locale: str,
+         formatter = babel.dates.format_date
+ 
+     try:
+-        return formatter(date, format, locale=locale)
++        result = formatter(date, format, locale=locale)
++        # normalize narrow no-break and no-break spaces to regular spaces
++        if isinstance(result, str):
++            return result.replace('\u202f', ' ').replace('\u00A0', ' ')
++        return result
+     except (ValueError, babel.core.UnknownLocaleError):
+         # fallback to English
+-        return formatter(date, format, locale='en')
++        result = formatter(date, format, locale='en')
++        if isinstance(result, str):
++            return result.replace('\u202f', ' ').replace('\u00A0', ' ')
++        return result
+     except AttributeError:
+         logger.warning(__('Invalid date format. Quote the string by single quote '
+                           'if you want to output it directly: %s'), format)

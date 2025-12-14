@@ -1,0 +1,232 @@
+diff --git a/django/db/migrations/operations/models.py b/django/db/migrations/operations/models.py
+index c120f5d32d..e4a1cde9e1 100644
+--- a/django/db/migrations/operations/models.py
++++ b/django/db/migrations/operations/models.py
+@@ -96,6 +96,18 @@ class CreateModel(ModelOperation):
+         if self.allow_migrate_model(schema_editor.connection.alias, model):
+             schema_editor.delete_model(model)
+ 
++
++    def reduce(self, operation, app_label):
++        # If the other operation is the same AlterTogetherOptionOperation subclass
++        # (e.g. two AlterUniqueTogether) for the same model, keep the later one.
++        if isinstance(operation, self.__class__) and self.name_lower == operation.name_lower:
++            return [operation]
++        # Allow optimizing through other AlterTogetherOptionOperation instances for the same model
++        # (e.g. allow AlterUniqueTogether to optimize through AlterIndexTogether).
++        if isinstance(operation, AlterTogetherOptionOperation) and self.name_lower == operation.name_lower:
++            return True
++        return super().reduce(operation, app_label)
++
+     def describe(self):
+         return "Create %smodel %s" % ("proxy " if self.options.get("proxy", False) else "", self.name)
+ 
+@@ -278,6 +290,18 @@ class DeleteModel(ModelOperation):
+         # related fields.
+         return True
+ 
++
++    def reduce(self, operation, app_label):
++        # If the other operation is the same AlterTogetherOptionOperation subclass
++        # (e.g. two AlterUniqueTogether) for the same model, keep the later one.
++        if isinstance(operation, self.__class__) and self.name_lower == operation.name_lower:
++            return [operation]
++        # Allow optimizing through other AlterTogetherOptionOperation instances for the same model
++        # (e.g. allow AlterUniqueTogether to optimize through AlterIndexTogether).
++        if isinstance(operation, AlterTogetherOptionOperation) and self.name_lower == operation.name_lower:
++            return True
++        return super().reduce(operation, app_label)
++
+     def describe(self):
+         return "Delete model %s" % self.name
+ 
+@@ -383,6 +407,18 @@ class RenameModel(ModelOperation):
+             name.lower() == self.new_name_lower
+         )
+ 
++
++    def reduce(self, operation, app_label):
++        # If the other operation is the same AlterTogetherOptionOperation subclass
++        # (e.g. two AlterUniqueTogether) for the same model, keep the later one.
++        if isinstance(operation, self.__class__) and self.name_lower == operation.name_lower:
++            return [operation]
++        # Allow optimizing through other AlterTogetherOptionOperation instances for the same model
++        # (e.g. allow AlterUniqueTogether to optimize through AlterIndexTogether).
++        if isinstance(operation, AlterTogetherOptionOperation) and self.name_lower == operation.name_lower:
++            return True
++        return super().reduce(operation, app_label)
++
+     def describe(self):
+         return "Rename model %s to %s" % (self.old_name, self.new_name)
+ 
+@@ -456,6 +492,18 @@ class AlterModelTable(ModelOptionOperation):
+     def database_backwards(self, app_label, schema_editor, from_state, to_state):
+         return self.database_forwards(app_label, schema_editor, from_state, to_state)
+ 
++
++    def reduce(self, operation, app_label):
++        # If the other operation is the same AlterTogetherOptionOperation subclass
++        # (e.g. two AlterUniqueTogether) for the same model, keep the later one.
++        if isinstance(operation, self.__class__) and self.name_lower == operation.name_lower:
++            return [operation]
++        # Allow optimizing through other AlterTogetherOptionOperation instances for the same model
++        # (e.g. allow AlterUniqueTogether to optimize through AlterIndexTogether).
++        if isinstance(operation, AlterTogetherOptionOperation) and self.name_lower == operation.name_lower:
++            return True
++        return super().reduce(operation, app_label)
++
+     def describe(self):
+         return "Rename table for %s to %s" % (
+             self.name,
+@@ -521,6 +569,18 @@ class AlterTogetherOptionOperation(ModelOptionOperation):
+             )
+         )
+ 
++
++    def reduce(self, operation, app_label):
++        # If the other operation is the same AlterTogetherOptionOperation subclass
++        # (e.g. two AlterUniqueTogether) for the same model, keep the later one.
++        if isinstance(operation, self.__class__) and self.name_lower == operation.name_lower:
++            return [operation]
++        # Allow optimizing through other AlterTogetherOptionOperation instances for the same model
++        # (e.g. allow AlterUniqueTogether to optimize through AlterIndexTogether).
++        if isinstance(operation, AlterTogetherOptionOperation) and self.name_lower == operation.name_lower:
++            return True
++        return super().reduce(operation, app_label)
++
+     def describe(self):
+         return "Alter %s for %s (%s constraint(s))" % (self.option_name, self.name, len(self.option_value or ''))
+ 
+@@ -608,6 +668,18 @@ class AlterOrderWithRespectTo(ModelOptionOperation):
+             )
+         )
+ 
++
++    def reduce(self, operation, app_label):
++        # If the other operation is the same AlterTogetherOptionOperation subclass
++        # (e.g. two AlterUniqueTogether) for the same model, keep the later one.
++        if isinstance(operation, self.__class__) and self.name_lower == operation.name_lower:
++            return [operation]
++        # Allow optimizing through other AlterTogetherOptionOperation instances for the same model
++        # (e.g. allow AlterUniqueTogether to optimize through AlterIndexTogether).
++        if isinstance(operation, AlterTogetherOptionOperation) and self.name_lower == operation.name_lower:
++            return True
++        return super().reduce(operation, app_label)
++
+     def describe(self):
+         return "Set order_with_respect_to on %s to %s" % (self.name, self.order_with_respect_to)
+ 
+@@ -667,6 +739,18 @@ class AlterModelOptions(ModelOptionOperation):
+     def database_backwards(self, app_label, schema_editor, from_state, to_state):
+         pass
+ 
++
++    def reduce(self, operation, app_label):
++        # If the other operation is the same AlterTogetherOptionOperation subclass
++        # (e.g. two AlterUniqueTogether) for the same model, keep the later one.
++        if isinstance(operation, self.__class__) and self.name_lower == operation.name_lower:
++            return [operation]
++        # Allow optimizing through other AlterTogetherOptionOperation instances for the same model
++        # (e.g. allow AlterUniqueTogether to optimize through AlterIndexTogether).
++        if isinstance(operation, AlterTogetherOptionOperation) and self.name_lower == operation.name_lower:
++            return True
++        return super().reduce(operation, app_label)
++
+     def describe(self):
+         return "Change Meta options on %s" % self.name
+ 
+@@ -700,6 +784,18 @@ class AlterModelManagers(ModelOptionOperation):
+     def database_backwards(self, app_label, schema_editor, from_state, to_state):
+         pass
+ 
++
++    def reduce(self, operation, app_label):
++        # If the other operation is the same AlterTogetherOptionOperation subclass
++        # (e.g. two AlterUniqueTogether) for the same model, keep the later one.
++        if isinstance(operation, self.__class__) and self.name_lower == operation.name_lower:
++            return [operation]
++        # Allow optimizing through other AlterTogetherOptionOperation instances for the same model
++        # (e.g. allow AlterUniqueTogether to optimize through AlterIndexTogether).
++        if isinstance(operation, AlterTogetherOptionOperation) and self.name_lower == operation.name_lower:
++            return True
++        return super().reduce(operation, app_label)
++
+     def describe(self):
+         return "Change managers on %s" % self.name
+ 
+@@ -752,6 +848,18 @@ class AddIndex(IndexOperation):
+             kwargs,
+         )
+ 
++
++    def reduce(self, operation, app_label):
++        # If the other operation is the same AlterTogetherOptionOperation subclass
++        # (e.g. two AlterUniqueTogether) for the same model, keep the later one.
++        if isinstance(operation, self.__class__) and self.name_lower == operation.name_lower:
++            return [operation]
++        # Allow optimizing through other AlterTogetherOptionOperation instances for the same model
++        # (e.g. allow AlterUniqueTogether to optimize through AlterIndexTogether).
++        if isinstance(operation, AlterTogetherOptionOperation) and self.name_lower == operation.name_lower:
++            return True
++        return super().reduce(operation, app_label)
++
+     def describe(self):
+         if self.index.expressions:
+             return 'Create index %s on %s on model %s' % (
+@@ -805,6 +913,18 @@ class RemoveIndex(IndexOperation):
+             kwargs,
+         )
+ 
++
++    def reduce(self, operation, app_label):
++        # If the other operation is the same AlterTogetherOptionOperation subclass
++        # (e.g. two AlterUniqueTogether) for the same model, keep the later one.
++        if isinstance(operation, self.__class__) and self.name_lower == operation.name_lower:
++            return [operation]
++        # Allow optimizing through other AlterTogetherOptionOperation instances for the same model
++        # (e.g. allow AlterUniqueTogether to optimize through AlterIndexTogether).
++        if isinstance(operation, AlterTogetherOptionOperation) and self.name_lower == operation.name_lower:
++            return True
++        return super().reduce(operation, app_label)
++
+     def describe(self):
+         return 'Remove index %s from %s' % (self.name, self.model_name)
+ 
+@@ -839,6 +959,18 @@ class AddConstraint(IndexOperation):
+             'constraint': self.constraint,
+         }
+ 
++
++    def reduce(self, operation, app_label):
++        # If the other operation is the same AlterTogetherOptionOperation subclass
++        # (e.g. two AlterUniqueTogether) for the same model, keep the later one.
++        if isinstance(operation, self.__class__) and self.name_lower == operation.name_lower:
++            return [operation]
++        # Allow optimizing through other AlterTogetherOptionOperation instances for the same model
++        # (e.g. allow AlterUniqueTogether to optimize through AlterIndexTogether).
++        if isinstance(operation, AlterTogetherOptionOperation) and self.name_lower == operation.name_lower:
++            return True
++        return super().reduce(operation, app_label)
++
+     def describe(self):
+         return 'Create constraint %s on model %s' % (self.constraint.name, self.model_name)
+ 
+@@ -877,6 +1009,18 @@ class RemoveConstraint(IndexOperation):
+             'name': self.name,
+         }
+ 
++
++    def reduce(self, operation, app_label):
++        # If the other operation is the same AlterTogetherOptionOperation subclass
++        # (e.g. two AlterUniqueTogether) for the same model, keep the later one.
++        if isinstance(operation, self.__class__) and self.name_lower == operation.name_lower:
++            return [operation]
++        # Allow optimizing through other AlterTogetherOptionOperation instances for the same model
++        # (e.g. allow AlterUniqueTogether to optimize through AlterIndexTogether).
++        if isinstance(operation, AlterTogetherOptionOperation) and self.name_lower == operation.name_lower:
++            return True
++        return super().reduce(operation, app_label)
++
+     def describe(self):
+         return 'Remove constraint %s from model %s' % (self.name, self.model_name)
+ 

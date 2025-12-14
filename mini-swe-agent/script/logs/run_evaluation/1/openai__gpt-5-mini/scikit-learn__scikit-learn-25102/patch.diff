@@ -1,0 +1,152 @@
+diff --git a/sklearn/utils/_set_output.py b/sklearn/utils/_set_output.py
+index 335773c6a..ebb077ced 100644
+--- a/sklearn/utils/_set_output.py
++++ b/sklearn/utils/_set_output.py
+@@ -12,6 +12,7 @@ def _wrap_in_pandas_container(
+     *,
+     columns,
+     index=None,
++    dtypes=None,
+ ):
+     """Create a Pandas DataFrame.
+ 
+@@ -36,6 +37,11 @@ def _wrap_in_pandas_container(
+     index : array-like, default=None
+         Index for data.
+ 
++    dtypes : mapping or pandas.Series, default=None
++        If not None, attempt to cast the resulting DataFrame to these dtypes.
++        Keys should be column names (or a pandas Series indexed by column names).
++        Casting is attempted only for columns that are present in the output and
++        failures are silently ignored.
+     Returns
+     -------
+     dataframe : DataFrame
+@@ -52,14 +58,46 @@ def _wrap_in_pandas_container(
+ 
+     pd = check_pandas_support("Setting output container to 'pandas'")
+ 
++    # Normalize dtypes mapping if it's a pandas Series
++    dtype_mapping = None
++    if dtypes is not None:
++        try:
++            # If dtypes is a Series (pandas), convert to dict
++            dtype_mapping = getattr(dtypes, "to_dict", lambda: dtypes)()
++        except Exception:
++            dtype_mapping = dtypes
++
+     if isinstance(data_to_wrap, pd.DataFrame):
+         if columns is not None:
+             data_to_wrap.columns = columns
+         if index is not None:
+             data_to_wrap.index = index
++
++        if dtype_mapping:
++            # Only keep mappings for columns present in the DataFrame
++            try:
++                applicable = {k: v for k, v in dtype_mapping.items() if k in data_to_wrap.columns}
++                if applicable:
++                    # Try to cast; if it fails, ignore and return original frame
++                    data_to_wrap = data_to_wrap.astype(applicable)
++            except Exception:
++                # Be conservative: on any failure, return the dataframe as-is.
++                pass
++
+         return data_to_wrap
+ 
+-    return pd.DataFrame(data_to_wrap, index=index, columns=columns)
++    df = pd.DataFrame(data_to_wrap, index=index, columns=columns)
++
++    if dtype_mapping:
++        try:
++            applicable = {k: v for k, v in dtype_mapping.items() if k in df.columns}
++            if applicable:
++                df = df.astype(applicable)
++        except Exception:
++            # If astype fails (e.g., incompatible types), return df unchanged.
++            pass
++
++    return df
+ 
+ 
+ def _get_output_config(method, estimator=None):
+@@ -81,10 +119,17 @@ def _get_output_config(method, estimator=None):
+ 
+         - "dense": specifies the dense container for `method`. This can be
+           `"default"` or `"pandas"`.
++        - "preserve_dtype": whether to attempt to preserve dtypes when wrapping.
+     """
+     est_sklearn_output_config = getattr(estimator, "_sklearn_output_config", {})
++    preserve_dtype = False
+     if method in est_sklearn_output_config:
+-        dense_config = est_sklearn_output_config[method]
++        raw = est_sklearn_output_config[method]
++        if isinstance(raw, dict):
++            dense_config = raw.get("dense")
++            preserve_dtype = bool(raw.get("preserve_dtype", False))
++        else:
++            dense_config = raw
+     else:
+         dense_config = get_config()[f"{method}_output"]
+ 
+@@ -93,7 +138,7 @@ def _get_output_config(method, estimator=None):
+             f"output config must be 'default' or 'pandas' got {dense_config}"
+         )
+ 
+-    return {"dense": dense_config}
++    return {"dense": dense_config, "preserve_dtype": preserve_dtype}
+ 
+ 
+ def _wrap_data_with_container(method, data_to_wrap, original_input, estimator):
+@@ -127,10 +172,13 @@ def _wrap_data_with_container(method, data_to_wrap, original_input, estimator):
+         return data_to_wrap
+ 
+     # dense_config == "pandas"
++    dtypes = getattr(original_input, "dtypes", None) if output_config.get("preserve_dtype", False) else None
++
+     return _wrap_in_pandas_container(
+         data_to_wrap=data_to_wrap,
+         index=getattr(original_input, "index", None),
+         columns=estimator.get_feature_names_out,
++        dtypes=dtypes,
+     )
+ 
+ 
+@@ -208,7 +256,7 @@ class _SetOutputMixin:
+             setattr(cls, method, wrapped_method)
+ 
+     @available_if(_auto_wrap_is_configured)
+-    def set_output(self, *, transform=None):
++    def set_output(self, *, transform=None, preserve_dtype=False):
+         """Set output container.
+ 
+         See :ref:`sphx_glr_auto_examples_miscellaneous_plot_set_output.py`
+@@ -223,18 +271,26 @@ class _SetOutputMixin:
+             - `"pandas"`: DataFrame output
+             - `None`: Transform configuration is unchanged
+ 
++        preserve_dtype : bool, default=False
++            If True and `transform="pandas"`, attempt to preserve dtypes from the
++            original input when producing the pandas DataFrame output.
++
+         Returns
+         -------
+         self : estimator instance
+             Estimator instance.
+         """
+-        if transform is None:
++        if transform is None and not preserve_dtype:
+             return self
+ 
+         if not hasattr(self, "_sklearn_output_config"):
+             self._sklearn_output_config = {}
+ 
+-        self._sklearn_output_config["transform"] = transform
++        if preserve_dtype:
++            # Store a richer configuration so that dtype preservation can be applied
++            self._sklearn_output_config["transform"] = {"dense": transform, "preserve_dtype": True}
++        else:
++            self._sklearn_output_config["transform"] = transform
+         return self
+ 
+ 

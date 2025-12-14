@@ -1,0 +1,33 @@
+diff --git a/django/apps/registry.py b/django/apps/registry.py
+index 408964a146..10e1ce259c 100644
+--- a/django/apps/registry.py
++++ b/django/apps/registry.py
+@@ -147,7 +147,7 @@ class Apps:
+     def get_app_config(self, app_label):
+         """
+         Import applications and returns an app config for the given label.
+-
++    
+         Raise LookupError if no application exists with this label.
+         """
+         self.check_apps_ready()
+@@ -155,13 +155,17 @@ class Apps:
+             return self.app_configs[app_label]
+         except KeyError:
+             message = "No installed app with label '%s'." % app_label
++            # Suggest exact-name matches (case-sensitive)
+             for app_config in self.get_app_configs():
+                 if app_config.name == app_label:
+                     message += " Did you mean '%s'?" % app_config.label
+                     break
++            # Accept and return case-insensitive matches for app name/label
++            for app_config in self.get_app_configs():
++                if (app_config.name.lower() == app_label.lower() or
++                    app_config.label.lower() == app_label.lower()):
++                    return app_config
+             raise LookupError(message)
+-
+-    # This method is performance-critical at least for Django's test suite.
+     @functools.lru_cache(maxsize=None)
+     def get_models(self, include_auto_created=False, include_swapped=False):
+         """

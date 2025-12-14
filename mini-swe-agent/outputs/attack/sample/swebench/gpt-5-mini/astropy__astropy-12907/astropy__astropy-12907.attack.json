@@ -1,0 +1,28 @@
+{
+  "info": {
+    "total_observations": 5,
+    "python_observations": 0,
+    "text_observations": 5,
+    "ast_operators_applied": 0,
+    "text_perturbation_applied": 2,
+    "skipped": 3
+  },
+  "perturbations": [
+    {
+      "action": "ls -la",
+      "original": "total 672\ndrwxrwxrwx  1 root root   4096 Sep 10 09:24 .\ndrwxr-xr-x  1 root root   4096 Nov 29 03:28 ..\n-rw-r--r--  1 root root      0 Sep 10 09:22 .astropy-root\ndrwxrwxrwx  2 root root   4096 Sep 10 09:22 .circleci\ndrwxrwxrwx  8 root root   4096 Sep 10 09:26 .git\n-rw-r--r--  1 root root     16 Sep 10 09:22 .gitattributes\ndrwxrwxrwx  4 root root   4096 Sep 10 09:22 .github\n-rw-r--r--  1 root root   1218 Sep 10 09:22 .gitignore\n-rw-r--r--  1 root root  19309 Sep 10 09:22 .mailmap\n-rw-r--r--  1 root root   2056 Sep 10 09:22 .pep8speaks.yml\n-rw-r--r--  1 root root   2788 Sep 10 09:22 .pre-commit-config.yaml\ndrwxrwxrwx  3 root root   4096 Sep 10 09:22 .pyinstaller\n-rw-r--r--  1 root root    425 Sep 10 09:22 .readthedocs.yml\n-rw-r--r--  1 root root 504041 Sep 10 09:22 CHANGES.rst\n-rw-r--r--  1 root root     66 Sep 10 09:22 CITATION\n-rw-r--r--  1 root root    139 Sep 10 09:22 CODE_OF_CONDUCT.md\n-rw-r--r--  1 root root   9569 Sep 10 09:22 CONTRIBUTING.md\n-rw-r--r--  1 root root    129 Sep 10 09:22 GOVERNANCE.md\n-rw-r--r--  1 root root   1496 Sep 10 09:22 LICENSE.rst\n-rw-r--r--  1 root root    703 Sep 10 09:22 MANIFEST.in\n-rw-r--r--  1 root root   4558 Sep 10 09:22 README.rst\ndrwxrwxrwx 24 root root   4096 Sep 10 09:26 astropy\ndrwxr-xr-x  2 root root   4096 Sep 10 09:24 astropy.egg-info\n-rw-r--r--  1 root root   4140 Sep 10 09:22 azure-pipelines.yml\ndrwxrwxrwx  5 root root   4096 Sep 10 09:22 cextern\n-rw-r--r--  1 root root     13 Sep 10 09:22 codecov.yml\n-rw-r--r--  1 root root   2568 Sep 10 09:22 conftest.py\ndrwxrwxrwx 25 root root   4096 Sep 10 09:22 docs\ndrwxr-xr-x  5 root root   4096 Sep 10 09:22 examples\ndrwxrwxrwx  2 root root   4096 Sep 10 09:22 licenses\n-rw-r--r--  1 root root    268 Sep 10 09:22 pip-requirements\n-rw-r--r--  1 root root   4494 Sep 10 09:24 pyproject.toml\n-rw-r--r--  1 root root   6251 Sep 10 09:22 setup.cfg\n-rwxr-xr-x  1 root root   1634 Sep 10 09:22 setup.py\n-rw-r--r--  1 root root   5721 Sep 10 09:22 tox.ini\n",
+      "perturbed": "total 672\ndrwxrwxrwx  1 root root   4096 Sep 10 09:24 .\ndrwxr-xr-x  1 root root   4096 Nov 29 03:28 ..\ndrwxrwxrwx  2 root root   4096 Sep 10 09:22 .circleci\n-rw-r--r--  1 root root      0 Sep 10 09:22 .astropy-root\ndrwxrwxrwx  8 root root   4096 Sep 10 09:26 .git\ndrwxrwxrwx  4 root root   4096 Sep 10 09:22 .github\n-rw-r--r--  1 root root     16 Sep 10 09:22 .gitattributes\n-rw-r--r--  1 root root   1218 Sep 10 09:22 .gitignore\n-rw-r--r--  1 root root  19309 Sep 10 09:22 .mailmap\n-rw-r--r--  1 root root   2056 Sep 10 09:22 .pep8speaks.yml\n-rw-r--r--  1 root root   2788 Sep 10 09:22 .pre-commit-config.yaml\ndrwxrwxrwx  3 root root   4096 Sep 10 09:22 .pyinstaller\n-rw-r--r--  1 root root 504041 Sep 10 09:22 CHANGES.rst\n-rw-r--r--  1 root root    425 Sep 10 09:22 .readthedocs.yml\n-rw-r--r--  1 root root    139 Sep 10 09:22 CODE_OF_CONDUCT.md\n-rw-r--r--  1 root root   9569 Sep 10 09:22 CONTRIBUTING.md\n-rw-r--r--  1 root root    703 Sep 10 09:22 MANIFEST.in\n-rw-r--r--  1 root root   1496 Sep 10 09:22 LICENSE.rst\n-rw-r--r--  1 root root   4558 Sep 10 09:22 README.rst\ndrwxrwxrwx 24 root root   4096 Sep 10 09:26 astropy\ndrwxr-xr-x  2 root root   4096 Sep 10 09:24 astropy.egg-info\n-rw-r--r--  1 root root   4140 Sep 10 09:22 azure-pipelines.yml\ndrwxrwxrwx  5 root root   4096 Sep 10 09:22 cextern\n-rw-r--r--  1 root root     13 Sep 10 09:22 codecov.yml\n-rw-r--r--  1 root root   2568 Sep 10 09:22 conftest.py\ndrwxrwxrwx 25 root root   4096 Sep 10 09:22 docs\ndrwxr-xr-x  5 root root   4096 Sep 10 09:22 examples\n-rw-r--r--  1 root root    268 Sep 10 09:22 pip-requirements\n-rw-r--r--  1 root root   4494 Sep 10 09:24 pyproject.toml\n-rwxr-xr-x  1 root root   1634 Sep 10 09:22 setup.py\n-rw-r--r--  1 root root   5721 Sep 10 09:22 tox.ini",
+      "applied_operators": [
+        "text_perturbation"
+      ]
+    },
+    {
+      "action": "sed -i \"s/cright\\[-right.shape\\[0\\]:, -right.shape\\[1\\]:\\] = 1/cright[-right.shape[0]:, -right.shape[1]:] = right/\" astropy/modeling/separable.py && python - <<'PY'\nfrom astropy.modeling import models as m\nfrom astropy.modeling.separable import separability_matrix\ncm = m.Linear1D(10) & m.Linear1D(5)\nprint(\"separability_matrix(cm) =\")\nprint(separability_matrix(cm))\nprint(\"\\nseparability_matrix(m.Pix2Sky_TAN() & m.Linear1D(10) & m.Linear1D(5)) =\")\nprint(separability_matrix(m.Pix2Sky_TAN() & m.Linear1D(10) & m.Linear1D(5))\n)\nprint(\"\\nseparability_matrix(m.Pix2Sky_TAN() & cm) =\")\nprint(separability_matrix(m.Pix2Sky_TAN() & cm))\nPY",
+      "original": "separability_matrix(cm) =\n[[ True False]\n [False  True]]\n\nseparability_matrix(m.Pix2Sky_TAN() & m.Linear1D(10) & m.Linear1D(5)) =\n[[ True  True False False]\n [ True  True False False]\n [False False  True False]\n [False False False  True]]\n\nseparability_matrix(m.Pix2Sky_TAN() & cm) =\n[[ True  True False False]\n [ True  True False False]\n [False False  True False]\n [False False False  True]]\n",
+      "perturbed": "separability_matrix(cm) =\n[[ True False]\n [False  True]]\n\nseparability_matrix(m.Pix2Sky_TAN() & m.Linear1D(10) & m.Linear1D(5)) =\n[[ True  True False False]\n [ True  True False False]\n [False False  True False]\n [False False False  True]]\nseparability_matrix(m.Pix2Sky_TAN() & cm) =\n[[ True  True False False]\n [False False  True False]\n [False False False  True]]",
+      "applied_operators": [
+        "text_perturbation"
+      ]
+    }
+  ]
+}

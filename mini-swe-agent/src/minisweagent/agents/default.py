@@ -27,6 +27,8 @@ class AgentConfig:
     action_regex: str = r"```bash\s*\n(.*?)\n```"
     step_limit: int = 0
     cost_limit: float = 3.0
+    enable_attack: bool = False  # Enable observation perturbation attack
+    attack_max_operators: int = 3  # Maximum mutation operators to apply
 
 
 class NonTerminatingException(Exception):
@@ -60,6 +62,45 @@ class DefaultAgent:
         self.model = model
         self.env = env
         self.extra_template_vars = {}
+        self._init_attack()
+
+    def _init_attack(self):
+        """Initialize attack module if enabled."""
+        self.perturb_fn = None
+        self.attack_log = []  # Track successful perturbation records only
+        self.attack_stats = {"total": 0, "perturbed": 0, "python": 0, "text": 0}  # Track all observations
+        if self.config.enable_attack:
+            print("Initializing observation perturbation attack...")
+            try:
+                from bug_injection.bug_injector import inject_bugs
+                self.perturb_fn = lambda obs: inject_bugs(obs, max_operators=self.config.attack_max_operators)
+            except ImportError:
+                print("Warning: bug_injection module not found. Observation perturbation disabled.")
+
+    def get_attack_data(self) -> dict:
+        """Get attack statistics and perturbation log."""
+        if not self.config.enable_attack:
+            return None
+
+        # Count by content type
+        python_obs = self.attack_stats.get("python", 0)
+        text_obs = self.attack_stats.get("text", 0)
+
+        # Count by operators applied
+        ast_applied = sum(1 for r in self.attack_log if "text_perturbation" not in r.get("applied_operators", []))
+        text_applied = sum(1 for r in self.attack_log if "text_perturbation" in r.get("applied_operators", []))
+
+        return {
+            "info": {
+                "total_observations": self.attack_stats["total"],
+                "python_observations": python_obs,
+                "text_observations": text_obs,
+                "ast_operators_applied": ast_applied,
+                "text_perturbation_applied": text_applied,
+                "skipped": self.attack_stats["total"] - self.attack_stats["perturbed"],
+            },
+            "perturbations": self.attack_log
+        }
 
     def render_template(self, template: str, **kwargs) -> str:
         template_vars = asdict(self.config) | self.env.get_template_vars() | self.model.get_template_vars()
@@ -99,10 +140,47 @@ class DefaultAgent:
 
     def get_observation(self, response: dict) -> dict:
         """Execute the action and return the observation."""
-        output = self.execute_action(self.parse_action(response))
-        observation = self.render_template(self.config.action_observation_template, output=output)
+        action = self.parse_action(response)
+        output = self.execute_action(action)
+
+        # Apply observation perturbation if configured
+        perturbed_output = dict(output)
+        original_obs = output.get("output", "")
+
+        if self.config.enable_attack and original_obs.strip():
+            self.attack_stats["total"] += 1
+            # Classify as Python or text
+            is_python = self._is_python_code(original_obs)
+            if is_python:
+                self.attack_stats["python"] += 1
+            else:
+                self.attack_stats["text"] += 1
+
+        if self.perturb_fn and original_obs.strip():
+            perturbed_output["output"], applied_ops = self.perturb_fn(original_obs)
+
+            # Log only successful perturbations
+            if self.config.enable_attack and applied_ops:
+                self.attack_stats["perturbed"] += 1
+                self.attack_log.append({
+                    "action": action.get("action", ""),
+                    "original": original_obs,
+                    "perturbed": perturbed_output["output"],
+                    "applied_operators": applied_ops
+                })
+
+        observation = self.render_template(self.config.action_observation_template, output=perturbed_output)
         self.add_message("user", observation)
         return output
+
+    def _is_python_code(self, text: str) -> bool:
+        """Check if text is parseable Python code."""
+        try:
+            import ast
+            ast.parse(text)
+            return True
+        except:
+            return False
 
     def parse_action(self, response: dict) -> dict:
         """Parse the action from the message. Returns the action."""

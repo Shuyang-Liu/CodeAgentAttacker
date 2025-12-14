@@ -1,0 +1,40 @@
+diff --git a/django/db/models/enums.py b/django/db/models/enums.py
+index bbe362a6ab..1163a6d3bd 100644
+--- a/django/db/models/enums.py
++++ b/django/db/models/enums.py
+@@ -60,6 +60,8 @@ class ChoicesMeta(enum.EnumMeta):
+ 
+ class Choices(enum.Enum, metaclass=ChoicesMeta):
+     """Class for creating enumerated choices."""
++    def __str__(self):
++        return str(self.value)
+     pass
+ 
+ 
+diff --git a/django/db/models/query_utils.py b/django/db/models/query_utils.py
+index 189fb4fa44..9f6f9b94e8 100644
+--- a/django/db/models/query_utils.py
++++ b/django/db/models/query_utils.py
+@@ -12,6 +12,7 @@ from collections import namedtuple
+ 
+ from django.db.models.constants import LOOKUP_SEP
+ from django.utils import tree
++import enum
+ 
+ # PathInfo is used when converting lookups (fk__somecol). The contents
+ # describe the relation in Model terms (model Options and Fields for both
+@@ -137,6 +138,14 @@ class DeferredAttribute:
+                 val = getattr(instance, field_name)
+             data[field_name] = val
+         return data[field_name]
++    def __set__(self, instance, value):
++        """Store the value on the instance, converting Enum members
++        to their underlying value so freshly assigned choices match
++        values loaded from the database."""
++        if isinstance(value, enum.Enum):
++            value = value.value
++        instance.__dict__[self.field.attname] = value
++
+ 
+     def _check_parent_chain(self, instance):
+         """
