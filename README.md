@@ -7,6 +7,8 @@ This is the artifact of **WHEN ENVIRONMENTS MISLEAD: EXFILTRATION AND OBSERVATIO
 This repository implements **observation perturbation attacks** against coding agents by corrupting command outputs to test agent robustness under adversarial conditions.
 
 ## Core Components
+### Data Exfiltration
+We host the implementation of the two attacks under `data_exfiltration`.
 
 ### Bug Injection (`bug_injection/`)
 
